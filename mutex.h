@@ -1,8 +1,7 @@
 #ifndef _MUTEX_H_
 #define _MUTEX_H_
-/*-
- * 参照muduo库的mutex写出的一个简易的Mutex类.
- */
+
+//参照muduo库的mutex写出的一个简易的Mutex类
 
 #include <assert.h>
 #include <pthread.h>
@@ -10,60 +9,58 @@
 class MutexLock{
 
 public:
+
 	MutexLock(): holder_(0){
 
 		pthread_mutex_init(&mutex_, NULL); // 初始化 
 	}
-
 	~MutexLock(){
 
 		assert(holder_ == 0);
 		pthread_mutex_destroy(&mutex_); // 销毁锁 
 	}
-
 	const bool isLockedByThisThread(){  // 测试锁是否被当前线程持有 
 
 		return holder_ == pthread_self();
 	}
-
 	const void assertLocked() {
 
 		assert(isLockedByThisThread());
 	}
-
 	void lock(){
 
 		pthread_mutex_lock(&mutex_);
-		assignHolder(); /* 指定拥有者 */
+		assignHolder(); // 指定拥有者 
 	}
-
 	void unlock(){
 
-		unassignHolder(); /* 丢弃拥有者 */
+		unassignHolder(); // 丢弃拥有者 
 		pthread_mutex_unlock(&mutex_);
 	}
-
 	pthread_mutex_t* getPthreadMutex(){
 
 		return &mutex_;
 	}
+
 private:
 
 	friend class Condition;
 	
-	class UnassignGuard
-	{
+	class UnassignGuard{
+
 	public:
-		UnassignGuard(MutexLock& owner) 
-			: owner_(owner)
-		{
+
+		UnassignGuard(MutexLock& owner) : owner_(owner){
+
 			owner_.unassignHolder();
 		}
-		~UnassignGuard()
-		{
+		~UnassignGuard(){
+
 			owner_.assignHolder();
 		}
+
 	private:
+
 		MutexLock& owner_;
 	};
 	
@@ -75,27 +72,26 @@ private:
 
 		holder_ = pthread_self();
 	}
-	
 	pthread_mutex_t mutex_;
 	pthread_t holder_;
 };
 
-class MutexLockGuard
-{
+class MutexLockGuard{
+
 public:
-	MutexLockGuard(MutexLock& mutex)
-		: mutex_(mutex)
-	{
+
+	MutexLockGuard(MutexLock& mutex) : mutex_(mutex){
 		mutex_.lock();
 	}
-	~MutexLockGuard()
-	{
+	~MutexLockGuard(){
+
 		mutex_.unlock();
 	}
+
 private:
+
 	MutexLock& mutex_;
 };
-
 
 class Condition{
 
@@ -103,6 +99,7 @@ private:
 
 	MutexLock& mutex_;
 	pthread_cond_t pcond_;
+
 public:
 
 	Condition(MutexLock& mutex) : mutex_(mutex){
@@ -128,7 +125,5 @@ public:
 	}
 
 };
-
-
 
 #endif  _MUTEX_H_ 
