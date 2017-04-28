@@ -1,5 +1,5 @@
-#ifndef _MUTEX_H_
-#define _MUTEX_H_
+#ifndef _MUTEX_HPP_
+#define _MUTEX_HPP_
 
 //参照muduo库的mutex写出的一个简易的Mutex类
 
@@ -126,4 +126,4 @@ public:
 
 };
 
-#endif  _MUTEX_H_ 
+#endif  _MUTEX_HPP_ 

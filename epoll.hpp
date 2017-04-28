@@ -1,6 +1,7 @@
-#ifndef _EPOLL_ULTI_H_
-#define _EPOLL_ULTI_H_
+#ifndef _EPOLL_HPP_
+#define _EPOLL_HPP_
 
+#include <bits/stdc++.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/epoll.h>
@@ -10,15 +11,10 @@
 #include <arpa/inet.h>
 #include <assert.h>
 #include <sys/stat.h>
-#include <string.h>
 #include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <sys/mman.h>
 #include <stdarg.h>
 #include <errno.h>
-
-#include "csapp.h"
 
 void removefd(int epollfd, int fd);
 void modfd(int epollfd, int fd, int ev);
@@ -26,5 +22,4 @@ void addfd(int epollfd, int fd, bool one_shot);
 int Epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);
 int Epoll_create(int size);
 
-
-#endif
+#endif _EPOLL_HPP_

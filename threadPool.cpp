@@ -1,4 +1,4 @@
-#include "thread_pool.h"
+#include "threadPool.hpp"
 
 ThreadPool::ThreadPool(int threadNum, int maxQueueSize)
 	: threadNum_(threadNum)
@@ -23,7 +23,7 @@ size_t ThreadPool::queueSize(){
 }
 
 void* ThreadPool::startThread(void* obj){
-	 //工作者线程 
+	 //任务线程 
 	Pthread_detach(Pthread_self());
 	ThreadPool* pool = static_cast<ThreadPool*>(obj);
 	pool->run();
@@ -48,7 +48,7 @@ ThreadPool::Task ThreadPool::take(){
 			notFull_.notify();
 		}
 	}
-	//cout<<"threadpool take 1 task!";
+	//std::cout<<"threadpool take 1 task!"<<std::endl;
 	return task;
 }
 void ThreadPool::run(){
@@ -58,10 +58,10 @@ void ThreadPool::run(){
 		Task task(take());
 		if (task) {
 
-			//cout<<"task run!";
+			//std::cout<<"task run!"<<std::endl;
 			task();
 		}
-		//cout<<"task over!";
+		//std::cout<<"task over!"<<std::endl;
 	}
 }
 
@@ -82,7 +82,7 @@ bool ThreadPool::append(Task&& task){
 		}
 		assert(!isFull());
 		queue_.push_back(std::move(task)); // 直接用move语义,提高了效率 
-		//cout<<"put task onto queue!";
+		//std::cout<<"put task onto queue!"<<std::endl;
 	}
 	notEmpty_.notify(); // 通知任务队列中有任务可做了 
 }

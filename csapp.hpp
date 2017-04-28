@@ -1,11 +1,9 @@
 /* $begin csapp.h */
-#ifndef __CSAPP_H__
-#define __CSAPP_H__
+#ifndef __CSAPP_HPP__
+#define __CSAPP_HPP__
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <bits/stdc++.h>
 #include <unistd.h>
-#include <string.h>
 #include <ctype.h>
 #include <setjmp.h>
 #include <signal.h>
@@ -16,7 +14,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <errno.h>
-#include <math.h>
+
 #include <pthread.h>
 #include <semaphore.h>
 #include <sys/socket.h>
@@ -150,7 +148,5 @@ extern "C" {
 }
 #endif
 
-
-#endif /* __CSAPP_H__ */
-/* $end csapp.h */
+#endif  __CSAPP_HPP__
 
