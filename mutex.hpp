@@ -3,6 +3,7 @@
 
 //参照muduo库的mutex写出的一个简易的Mutex类
 
+#include <bits/stdc++.h>
 #include <assert.h>
 #include <pthread.h>
 
@@ -12,14 +13,14 @@ public:
 
 	MutexLock(): holder_(0){
 
-		pthread_mutex_init(&mutex_, NULL); // 初始化 
+		pthread_mutex_init(&mutex_, NULL); // 初始化
 	}
 	~MutexLock(){
 
 		assert(holder_ == 0);
-		pthread_mutex_destroy(&mutex_); // 销毁锁 
+		pthread_mutex_destroy(&mutex_); // 销毁锁
 	}
-	const bool isLockedByThisThread(){  // 测试锁是否被当前线程持有 
+	const bool isLockedByThisThread(){  // 测试锁是否被当前线程持有
 
 		return holder_ == pthread_self();
 	}
@@ -30,11 +31,11 @@ public:
 	void lock(){
 
 		pthread_mutex_lock(&mutex_);
-		assignHolder(); // 指定拥有者 
+		assignHolder(); // 指定拥有者
 	}
 	void unlock(){
 
-		unassignHolder(); // 丢弃拥有者 
+		unassignHolder(); // 丢弃拥有者
 		pthread_mutex_unlock(&mutex_);
 	}
 	pthread_mutex_t* getPthreadMutex(){
@@ -45,7 +46,7 @@ public:
 private:
 
 	friend class Condition;
-	
+
 	class UnassignGuard{
 
 	public:
@@ -63,7 +64,7 @@ private:
 
 		MutexLock& owner_;
 	};
-	
+
 	void unassignHolder(){
 
 		holder_ = 0;
@@ -103,27 +104,27 @@ private:
 public:
 
 	Condition(MutexLock& mutex) : mutex_(mutex){
-			
+
 		pthread_cond_init(&pcond_, NULL);
 	}
 	~Condition(){
 
-		pthread_cond_destroy(&pcond_); // 销毁条件变量 
+		pthread_cond_destroy(&pcond_); // 销毁条件变量
 	}
 	void wait(){
 
 		MutexLock::UnassignGuard ug(mutex_);
-		pthread_cond_wait(&pcond_, mutex_.getPthreadMutex()); // 等待Mutex 
+		pthread_cond_wait(&pcond_, mutex_.getPthreadMutex()); // 等待Mutex
 	}
 	void notify(){
 
-		pthread_cond_signal(&pcond_); // 唤醒一个线程 
+		pthread_cond_signal(&pcond_); // 唤醒一个线程
 	}
 	void notifyAll(){
 
-		pthread_cond_broadcast(&pcond_); // 唤醒多个线程 
+		pthread_cond_broadcast(&pcond_); // 唤醒多个线程
 	}
 
 };
 
-#endif  _MUTEX_HPP_ 
+#endif  _MUTEX_HPP_
