@@ -43,7 +43,8 @@ public:
 private:
 
 	enum States{kRead, kWrite, kOver, kError};
-	void setState(States s) { 
+	void setState(States s) { //
+
 		state_ = s; 
 	}
 	States state_;
@@ -51,13 +52,13 @@ private:
 	int processWrite();
 	void reset();
 	bool addResponse(const char* format, ...);
-	bool addResponse(char * const);
+	bool addResponse(char *const);
 	int getLine(char *buf, int maxsize);
 	void static getFileType(char *fileName, char *fileType);
 	void sendErrorMsg(char *cause, char *errnum, char *shortmsg, char *longmsg);
 	void serveStatic(char *filename, size_t fileSize);
-	void serveDynamic(char *filename, size_t fileSize);
-	void readRequestHdrs(); /* 读取请求头 */
+	void serveDynamic(char *text, int len);
+	void readRequestHdrs(); // 读取请求头
 	int parseUri(char *uri, char *fileName, char *cgiargs);
 	bool read();
 	static const int READ_BUFFER_SIZE = 1024; // 读缓冲区的大小 
@@ -65,7 +66,7 @@ private:
 	static const char rootDir_[]; // 网页的根目录 
 	static const char homePage_[]; // 所指代的网页 
 	static Cache& cache_; // 全局cache_
-	static int epollfd_;
+	static int epollfd_; 
 	int sockfd_; //该HTTP连接的socket和对方的socket地址 
 	boost::shared_ptr<FileInfo> fileInfo_;
 	char readBuf_[READ_BUFFER_SIZE]; //读缓冲区
