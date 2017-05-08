@@ -16,7 +16,7 @@
 #include "httpServe.hpp"
 #include "threadPool.hpp"
 
-// 非阻塞版本的web server,主要利用epoll机制来实现多路IO复用.加上了线程池,这样以来可以实现更高的性能.
+//非阻塞版本的web server,主要利用epoll机制来实现多路IO复用.加上了线程池,这样以来可以实现更高的性能.
 
 #define MAXEVENTNUM 100
 
@@ -64,11 +64,11 @@ int main(int argc, char *argv[]){
 
 					int connfd = accept(listenfd, &clnaddr, &clnlen);
 					if (connfd == -1) {
-						if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) { // 将连接已经建立完了 x
+						if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) { // 连接已经建立
 
 							break;
 						}
-						//std::cout<<"accept error"<<std::endl;
+						std::cout<<"accept error"<<std::endl;
 					}
 					handle[connfd].init(connfd); // 初始化
 					addfd(epollfd, connfd, false); // 加入监听
