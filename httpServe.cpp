@@ -3,7 +3,7 @@
 Cache baseCache;
 Cache& HttpServe::cache_ = baseCache;
 int HttpServe::epollfd_ = -1;
-const char HttpServe::rootDir_[] = "/home/tinoryj/code/Server/webSrc";
+const char HttpServe::rootDir_[] = "/home/tinoryj/Documents/Code/Server/webSrc";
 const char HttpServe::homePage_[] = "index.html";
 
 void HttpServe::init(int sockfd){

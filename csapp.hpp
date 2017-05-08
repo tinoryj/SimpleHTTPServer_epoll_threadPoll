@@ -148,5 +148,5 @@ extern "C" {
 }
 #endif
 
-#endif  __CSAPP_HPP__
+#endif  
 

@@ -79,4 +79,4 @@ private:
 	size_t nStored_; //写缓冲区中待发送的字节数
 	size_t written_; //已经写了多少字节
 };
-#endif _HTTPSERVE_HPP_
+#endif 

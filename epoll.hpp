@@ -22,4 +22,4 @@ void addfd(int epollfd, int fd, bool one_shot);
 int Epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);
 int Epoll_create(int size);
 
-#endif _EPOLL_HPP_
+#endif 

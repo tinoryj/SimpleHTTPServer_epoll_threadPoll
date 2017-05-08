@@ -8,7 +8,7 @@ ThreadPool::ThreadPool(int threadNum, int maxQueueSize)
 	, notFull_(mutex_)
 {
 	assert(threadNum >= 1 && maxQueueSize >= 1);
-	// 接下来构建threadNum个线程 
+	// 接下来构建threadNum个线程
 	pthread_t tid_t;
 	for (int i = 0; i < threadNum; i++) {
 
@@ -23,7 +23,7 @@ size_t ThreadPool::queueSize(){
 }
 
 void* ThreadPool::startThread(void* obj){
-	 //任务线程 
+	 //任务线程
 	Pthread_detach(Pthread_self());
 	ThreadPool* pool = static_cast<ThreadPool*>(obj);
 	pool->run();
@@ -42,7 +42,7 @@ ThreadPool::Task ThreadPool::take(){
 
 		task = queue_.front();
 		queue_.pop_front();
-		
+
 		if (maxQueueSize_ > 0) {
 
 			notFull_.notify();
@@ -53,8 +53,8 @@ ThreadPool::Task ThreadPool::take(){
 }
 void ThreadPool::run(){
 
-	while (1){ 
-		// 一直运行下去 
+	while (1){
+		// 一直运行下去
 		Task task(take());
 		if (task) {
 
@@ -73,16 +73,16 @@ bool ThreadPool::isFull(){
 }
 
 bool ThreadPool::append(Task&& task){
-	 // 使用了右值引用 
+	 // 使用了右值引用
 	{
-		MutexLockGuard lock(mutex_); // 首先加锁 
+		MutexLockGuard lock(mutex_); // 首先加锁
 		while (isFull()) {
 
-			notFull_.wait(); // 等待queue有空闲位置 
+			notFull_.wait(); // 等待queue有空闲位置
 		}
 		assert(!isFull());
-		queue_.push_back(std::move(task)); // 直接用move语义,提高了效率 
+		queue_.push_back(std::move(task)); //删除任务
 		//std::cout<<"put task onto queue!"<<std::endl;
 	}
-	notEmpty_.notify(); // 通知任务队列中有任务可做了 
+	notEmpty_.notify(); // 通知任务队列中有任务可做了
 }

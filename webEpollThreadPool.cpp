@@ -34,16 +34,22 @@ void block_sigpipe(){
 
 int main(int argc, char *argv[]){
 
-	int listenfd = Open_listenfd(80); 
+	if(argc == 1){
+		std::cout<<"Uasge: ./webEpollThreadPoll 80(port num)"<<std::endl;
+		return 0;
+	}
+	int portNum = atoi(argv[1]);
+
+	int listenfd = Open_listenfd(portNum);
 	epoll_event events[MAXEVENTNUM];
 	sockaddr clnaddr;
 	socklen_t clnlen = sizeof(clnaddr);
 
-	block_sigpipe(); // 首先要将SIGPIPE消息阻塞掉 
+	block_sigpipe(); // 首先要将SIGPIPE消息阻塞掉
 
-	int epollfd = Epoll_create(1024); 
-	addfd(epollfd, listenfd, false); // epollfd要监听listenfd上的可读事件 
-	ThreadPool pools(20, 60000); // 20个线程,600个任务 
+	int epollfd = Epoll_create(1024);
+	addfd(epollfd, listenfd, false); // epollfd要监听listenfd上的可读事件
+	ThreadPool pools(20, 60000); // 20个线程,600个任务
 	HttpServe::setEpollfd(epollfd);
 	HttpServe handle[2000];
 
@@ -51,21 +57,21 @@ int main(int argc, char *argv[]){
 		int eventnum = Epoll_wait(epollfd, events, MAXEVENTNUM, -1);
 		for (int i = 0; i < eventnum; ++i) {
 			int sockfd = events[i].data.fd;
-			if (sockfd == listenfd) {  
-				//有连接到来 
+			if (sockfd == listenfd) {
+				//有连接到来
 				//std::cout<<"connection comes!"<<std::endl;
 				while (1){
 
 					int connfd = accept(listenfd, &clnaddr, &clnlen);
 					if (connfd == -1) {
-						if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) { // 将连接已经建立完了 
-							
+						if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) { // 将连接已经建立完了 x
+
 							break;
 						}
 						//std::cout<<"accept error"<<std::endl;
 					}
-					handle[connfd].init(connfd); // 初始化 
-					addfd(epollfd, connfd, false); // 加入监听 
+					handle[connfd].init(connfd); // 初始化
+					addfd(epollfd, connfd, false); // 加入监听
 				}
 			}
 			else { // 有数据可读或者可写
