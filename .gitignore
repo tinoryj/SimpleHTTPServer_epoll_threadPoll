@@ -1,0 +1,4 @@
+webSrc/*
+*.d
+*.o
+.vscode/*
