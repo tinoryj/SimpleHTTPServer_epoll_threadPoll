@@ -1,4 +1,4 @@
 webSrc/*
 *.d
 *.o
-
+.vscode/*
