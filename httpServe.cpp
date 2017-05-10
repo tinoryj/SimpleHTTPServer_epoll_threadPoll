@@ -23,7 +23,7 @@ void HttpServe::reset(){
 	sendFile_ = false;
 	written_ = 0;
 
-	setState(kRead); /* 现在需要读数据 */
+	setState(kRead); // 需要读数据 
 	memset(readBuf_, 0, READ_BUFFER_SIZE);
 	memset(writeBuf_, 0, WRITE_BUFFER_SIZE);
 }
@@ -41,8 +41,10 @@ void HttpServe::readRequestHdrs(){
 		}
 	}
 	int n = (strstr(readBuf_, "\r\n\r\n") - readBuf_) + 4;
-	for(int i = n, j = 0; i < strlen(readBuf_); i++, j++)
+	for(int i = n, j = 0; i < strlen(readBuf_); i++, j++){
+
 		postDataBuf_[j] = readBuf_[i];
+	}
 	return;
 }
 
@@ -61,7 +63,6 @@ int HttpServe::parseUri(char *uri, char *filename, char *cgiargs){
 			strcat(filename, homePage_);
 		if (strstr(uri, "/wrong.html"))
 			strcat(filename, homePage_);
-		//std::cout<<filename<<std::endl;
 		return 1;
 	}
 	else {
@@ -82,35 +83,42 @@ int HttpServe::parseUri(char *uri, char *filename, char *cgiargs){
 }
 
 int HttpServe::getLine(char *buf, int maxsize) {
-	 // 用于读取一行数据
+	 
 	int n; // 用于记录读取的字节的数目
 	for (n = 0; nChecked_ < nRead_;n++) {
 
 		*buf++ = readBuf_[nChecked_];
-		if (readBuf_[nChecked_++] == '\n')
-			break;
+		if (readBuf_[nChecked_++] == '\n'){
+
+			break;			
+		}
 	}
 	*buf = 0;
 	return n;
 }
 
 bool HttpServe::read(){
-	 // 由于epoll设置成了是边缘触发,所以要一次性将数据全部读尽
-	nRead_ = 0; // 首先要清零
+	//参数清零
+	nRead_ = 0;
 	nChecked_ = 0;
 	if (nRead_ >= READ_BUFFER_SIZE) {
+
 		return false;
 	}
 	int byte_read = 0;
 	while (true) {
+
 		byte_read = recv(sockfd_, readBuf_ + nRead_, READ_BUFFER_SIZE - nRead_, 0);
 		if (byte_read == -1) {  //出错
+
 			if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) {
+
 				break; //读取完毕
 			}
 			return false; // 出错
 		}
-		else if (byte_read == 0) { // 对方已经关闭了连接
+		else if (byte_read == 0) {  //对方关闭连接
+
 			return false;
 		}
 		nRead_ += byte_read;
@@ -124,8 +132,8 @@ void HttpServe::process(){
 	switch (state_){
 
 	case kRead: {
+
 		res = processRead();
-		//std::cout<<"processRead res is"<<res<<std::endl;
 		if (res == STATUS_WRITE)
 			modfd(epollfd_, sockfd_, EPOLLOUT);
 		else
@@ -133,8 +141,8 @@ void HttpServe::process(){
 		break;
 	}
 	case kWrite: {
+
 		res = processWrite();
-		//std::cout<<"processWrite res is"<<res<<std::endl;
 		if (res == STATUS_READ)
 			modfd(epollfd_, sockfd_, EPOLLIN);
 		else
@@ -142,6 +150,7 @@ void HttpServe::process(){
 		break;
 	}
 	default:
+
 		removefd(epollfd_, sockfd_);
 		break;
 	}
@@ -154,7 +163,7 @@ int HttpServe::processRead(){
 	char buf[MAXLINE], method[MAXLINE], uri[MAXLINE], version[MAXLINE], filename[MAXLINE], cgiargs[MAXLINE], line[MAXLINE];
 
 	if ((false == read()) || (nRead_ == 0)) {
-		//对方已经关闭了连接
+		//对方关闭连接
 		return STATUS_CLOSE;
 	}
 	//解析读入的数据
@@ -167,6 +176,7 @@ int HttpServe::processRead(){
 	}
 
 	readRequestHdrs();  // 处理剩余的请求头部
+	//简易处理登录请求
 	if(!strcasecmp(method, "POST")){
 
 		char *flag1 = strstr(postDataBuf_,"username=1234");
@@ -176,7 +186,6 @@ int HttpServe::processRead(){
 			memset(filename, 0, MAXLINE);
 			strcpy(filename, rootDir_);
 			strcat(filename, "/succes.html");
-			//std::cout<<filename;
 			stat(filename, &sbuf);
 			serveStatic(filename, sbuf.st_size);
 			goto end;
@@ -186,12 +195,12 @@ int HttpServe::processRead(){
 			memset(filename, 0, MAXLINE);
 			strcpy(filename, rootDir_);
 			strcat(filename, "/wrong.html");
-			//std::cout<<filename;
 			stat(filename, &sbuf);
 			serveStatic(filename, sbuf.st_size);
 			goto end;
 		}
 	}
+
 	is_static = parseUri(uri, filename, cgiargs);
 	if (stat(filename, &sbuf) < 0) {
 
@@ -208,7 +217,7 @@ int HttpServe::processRead(){
 		serveStatic(filename, sbuf.st_size);
 	}
 	else {
-		//动态页面处理
+		//动态页面处理，未完成，直接返回错误
 		sendErrorMsg(method, "501", "Not Implemented","Server does not implement this method");
 		goto end;
 	}
@@ -220,7 +229,7 @@ end:
 int HttpServe::processWrite(){
 
 	int res;
-	//数据要作为两部分发送,第1步,要发送writeBuf_里面的数据.
+	//数据作为两部分发送,第1步,要发送writeBuf_里面的数据.
 	size_t nRemain = strlen(writeBuf_) - written_; // writeBuf_中还有多少字节要写
 	if (nRemain > 0) {
 
@@ -232,7 +241,7 @@ int HttpServe::processWrite(){
 
 				if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) { // 资源暂时不可用
 
-					setState(kWrite); // 下一步需要写数据
+					setState(kWrite); // 下一步写数据
 					return STATUS_WRITE;
 				}
 
@@ -251,21 +260,18 @@ int HttpServe::processWrite(){
 
 		assert(fileInfo_);
 		size_t bytesToSend = fileInfo_->size_ + strlen(writeBuf_); // 总共需要发送的字节数目
-		//std::cout<<"bytesToSend! "<<bytesToSend<<std::endl;
 		char *fileAddr = (char *)fileInfo_->addr_;
-		//std::cout<<"fileAddr "<<fileAddr<<std::endl;
 		size_t fileSize = fileInfo_->size_;
-		//std::cout<<"fileSize "<<fileSize<<std::endl;
+		
 		while (true) {
 
 			size_t offset = written_ - strlen(writeBuf_);
 			res = write(sockfd_, fileAddr + offset, fileSize - offset); // 发送
-			//std::cout<<"file send once!"<<std::endl;
 			if (res < 0) {
 
 				if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) { // 资源暂时不可用
 
-					setState(kWrite); // 下一步需要写数据
+					setState(kWrite); // 下一步需要写数据st_mode
 					return STATUS_WRITE;
 				}
 				setState(kError); // 出现了错误
@@ -276,7 +282,6 @@ int HttpServe::processWrite(){
 				break;
 		}
 	}
-	//std::cout<<"send over!"<<std::endl
 	if (keepAlive_) {
 
 		reset();
@@ -290,7 +295,7 @@ int HttpServe::processWrite(){
 }
 
 void HttpServe::getFileType(char *filename, char *filetype){
-	 // 获得文件的类型
+	 
 	if (strstr(filename, ".html"))
 		strcpy(filetype, "text/html");
 	else if (strstr(filename, ".gif"))
@@ -308,7 +313,7 @@ void HttpServe::getFileType(char *filename, char *filetype){
 }
 
 void HttpServe::serveStatic(char *fileName, size_t fileSize){
-	 // 用于处理静态网页
+
 	int srcfd;
 	char fileType[MAXLINE], buf[MAXBUF];
 	getFileType(fileName, fileType);
@@ -327,8 +332,9 @@ void HttpServe::serveStatic(char *fileName, size_t fileSize){
 	cache_.getFileAddr(fileName, fileSize, fileInfo_);  // 添加文件
 	sendFile_ = true;
 }
+
 void HttpServe::serveDynamic(char *text, int len){
-	 // 用于处理动态的网页
+
 	int srcfd;
 	char buf[MAXBUF];
    	if(keepAlive_){
@@ -336,7 +342,7 @@ void HttpServe::serveDynamic(char *text, int len){
 		sprintf(buf, "HTTP/1.1 200 OK\r\n");
 	}
 	else{
-
+	
 		sprintf(buf, "HTTP/1.0 200 OK\r\n");
 	}
 	sprintf(buf, "%sServer: Tinoryj Web Server\r\n", buf);
@@ -369,8 +375,8 @@ void HttpServe::sendErrorMsg(char *cause, char *errnum, char *shortmsg, char *lo
 bool HttpServe::addResponse(char* const str){
 
 	int len = strlen(str);
-	if ((nStored_ >= WRITE_BUFFER_SIZE) || (nStored_ + len >= WRITE_BUFFER_SIZE)) {
-
+	if ((nStored_ >= WRITE_BUFFER_SIZE) || (nStored_ + len >= WRITE_BUFFER_SIZE)){
+		
 		return false;
 	}
 	strncpy(writeBuf_ + nStored_, str, len); // 拷贝len个字符
@@ -380,13 +386,14 @@ bool HttpServe::addResponse(char* const str){
 
 bool HttpServe::addResponse(const char* format, ...){
 
-	if (nStored_ >= WRITE_BUFFER_SIZE) {
+	if (nStored_ >= WRITE_BUFFER_SIZE){
+
 		return false;
 	}
 	va_list arg_list;
 	va_start(arg_list, format);
 	int len = vsnprintf(writeBuf_ + nStored_, WRITE_BUFFER_SIZE - 1 - nStored_, format, arg_list);
-	if (len >= (WRITE_BUFFER_SIZE - 1 - nStored_)) {
+	if (len >= (WRITE_BUFFER_SIZE - 1 - nStored_)){
 
 		return false;
 	}

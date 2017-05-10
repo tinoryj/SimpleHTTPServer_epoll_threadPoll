@@ -16,7 +16,7 @@
 #include "httpServe.hpp"
 #include "threadPool.hpp"
 
-//非阻塞版本的web server,主要利用epoll机制来实现多路IO复用.加上了线程池,这样以来可以实现更高的性能.
+//非阻塞版本的web server,主要利用epoll机制来实现多路IO复用.加上了线程池,可以实现更高的性能.
 
 #define MAXEVENTNUM 100
 
@@ -34,7 +34,7 @@ void block_sigpipe(){
 
 int main(int argc, char *argv[]){
 
-	if(argc == 1){
+	if(argc != 2){
 		std::cout<<"Uasge: ./webEpollThreadPoll 80(port num)"<<std::endl;
 		return 0;
 	}
@@ -58,8 +58,8 @@ int main(int argc, char *argv[]){
 		for (int i = 0; i < eventnum; ++i) {
 			int sockfd = events[i].data.fd;
 			if (sockfd == listenfd) {
-				//有连接到来
-				//std::cout<<"connection comes!"<<std::endl;
+
+				std::cout<<"connection comes!"<<std::endl;
 				while (1){
 
 					int connfd = accept(listenfd, &clnaddr, &clnlen);

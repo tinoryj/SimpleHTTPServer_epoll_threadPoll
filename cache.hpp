@@ -42,12 +42,12 @@ public:
 	void getFileAddr(std::string fileName, int fileSize, boost::shared_ptr<FileInfo>& ptr) {
 		//shared_ptr并不是线程安全的,对其的读写都需要加锁.
 		MutexLockGuard lock(mutex_);
-		if (cache_.end() != cache_.find(fileName)) { // 如果在cache中找到了
+		if (cache_.end() != cache_.find(fileName)) { //在cache中找到了
 
 			ptr = cache_[fileName];
 			return;
 		}
-		if (cache_.size() >= MAX_CACHE_SIZE) { // 文件数目过多,需要删除一个元素
+		if (cache_.size() >= MAX_CACHE_SIZE) { //文件数目过多,需要删除一个元素
 
 			cache_.erase(cache_.begin()); // 直接移除掉最前一个元素
 		}

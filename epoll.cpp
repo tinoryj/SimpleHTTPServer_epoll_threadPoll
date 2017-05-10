@@ -15,7 +15,7 @@ void addfd(int epollfd, int fd, bool oneShot){
 	event.events = EPOLLIN | EPOLLET; // ET触发 
 	if (oneShot) {
 
-		event.events |= EPOLLONESHOT; // 这里特别要注意一下 
+		event.events |= EPOLLONESHOT; 
 	}
 	epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &event);
 	setnonblocking(fd);
@@ -41,7 +41,7 @@ int Epoll_create(int size){
 	if ((rc = epoll_create(size)) < 0) {
 		std::cout<<"epoll_crate failed"<<std::endl;
 	}
-	return rc; // 否则的话,返回文件描述符 
+	return rc; // 否则返回文件描述符 
 }
 
 int Epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout){

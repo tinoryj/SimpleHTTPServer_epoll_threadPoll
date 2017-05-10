@@ -25,10 +25,6 @@
 #define STATUS_CLOSE	3
 #define STATUS_ERROR	-1
 
-
-// HttpServe类用于处理http请求/处理静态网页.
-
-
 class HttpServe{
 
 public:
@@ -48,19 +44,21 @@ private:
 		state_ = s;
 	}
 	States state_;
-	int processRead();
-	int processWrite();
-	void reset();
-	bool addResponse(const char* format, ...);
-	bool addResponse(char *const);
-	int getLine(char *buf, int maxsize);
-	void static getFileType(char *fileName, char *fileType);
-	void sendErrorMsg(char *cause, char *errnum, char *shortmsg, char *longmsg);
-	void serveStatic(char *filename, size_t fileSize);
-	void serveDynamic(char *text, int len);
+	//成员函数
+	int processRead(); //读操作
+	int processWrite(); //写操作
+	void reset(); //重置
+	bool addResponse(const char* format, ...); 
+	bool addResponse(char *const); //
+	int getLine(char *buf, int maxsize); //在请求信息缓存中读取一行
+	void static getFileType(char *fileName, char *fileType); //获取文件类型信息，用于制作响应头
+	void sendErrorMsg(char *cause, char *errnum, char *shortmsg, char *longmsg); //错误信息发送
+	void serveStatic(char *filename, size_t fileSize); //静态网页处理
+	void serveDynamic(char *text, int len); //动态网页处理
 	void readRequestHdrs(); // 读取请求头
-	int parseUri(char *uri, char *fileName, char *cgiargs);
+	int parseUri(char *uri, char *fileName, char *cgiargs); //处理GET路径
 	bool read();
+	//常量
 	static const int READ_BUFFER_SIZE = 1024; // 读缓冲区的大小
 	static const int WRITE_BUFFER_SIZE = 1024; // 写缓冲区的大小
 	static const char rootDir_[]; // 网页的根目录

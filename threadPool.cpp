@@ -8,7 +8,7 @@ ThreadPool::ThreadPool(int threadNum, int maxQueueSize)
 	, notFull_(mutex_)
 {
 	assert(threadNum >= 1 && maxQueueSize >= 1);
-	// 接下来构建threadNum个线程
+	//构建threadNum个线程
 	pthread_t tid_t;
 	for (int i = 0; i < threadNum; i++) {
 
@@ -48,20 +48,17 @@ ThreadPool::Task ThreadPool::take(){
 			notFull_.notify();
 		}
 	}
-	//std::cout<<"threadpool take 1 task!"<<std::endl;
 	return task;
 }
 void ThreadPool::run(){
 
 	while (1){
-		// 一直运行下去
+		
 		Task task(take());
 		if (task) {
 
-			//std::cout<<"task run!"<<std::endl;
 			task();
 		}
-		//std::cout<<"task over!"<<std::endl;
 	}
 }
 
@@ -82,7 +79,7 @@ bool ThreadPool::append(Task&& task){
 		}
 		assert(!isFull());
 		queue_.push_back(std::move(task)); //删除任务
-		//std::cout<<"put task onto queue!"<<std::endl;
 	}
-	notEmpty_.notify(); // 通知任务队列中有任务可做了
+
+	notEmpty_.notify(); // 通知任务队列中有任务可做
 }
