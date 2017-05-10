@@ -49,7 +49,7 @@ int main(int argc, char *argv[]){
 
 	int epollfd = Epoll_create(1024);
 	addfd(epollfd, listenfd, false); // epollfd要监听listenfd上的可读事件
-	ThreadPool pools(20, 60000); // 20个线程,600个任务
+	ThreadPool pools(5, 10000); 
 	HttpServe::setEpollfd(epollfd);
 	HttpServe handle[2000];
 

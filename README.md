@@ -11,7 +11,7 @@
 
 ## 实现方法
 
-Epoll + 线程池, 程序运行于tinoryj.cn作为demo，访问账户、密码均为1234。
+Epoll + 线程池
 ## 其他需求
 
 需要安装boost库，由于使用Epoll，必须在Linux系统下运行。
