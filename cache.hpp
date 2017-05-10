@@ -31,7 +31,7 @@ class Cache{
 
 private:
 
-	std::map<std::string, boost::shared_ptr<FileInfo>> cache_; // 实现文件名称到地址的一个映射
+	std::map<std::string, boost::shared_ptr<FileInfo>> cache_; // 实现文件名称到地址的映射
 	static const size_t MAX_CACHE_SIZE = 100; // 最多缓存100个文件
 	MutexLock mutex_;
 
