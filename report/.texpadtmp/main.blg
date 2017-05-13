@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2016)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: /Users/tinoryj/Downloads/ThesisUESTC-master/.texpadtmp/main.aux
+The style file: ../thesis-uestc.bst
+Database file #1: ../reference.bib
+Warning--entry type for "HTTP" isn't style-file defined
+--line 11 of file ../reference.bib
+You've used 5 entries,
+            715 wiz_defined-function locations,
+            265 strings with 1987 characters,
+and the built_in function-call counts, 313 in all, are:
+= -- 9
+> -- 12
+< -- 0
++ -- 5
+- -- 4
+* -- 19
+:= -- 49
+add.period$ -- 0
+call.type$ -- 5
+change.case$ -- 4
+chr.to.int$ -- 0
+cite$ -- 4
+duplicate$ -- 16
+empty$ -- 16
+format.name$ -- 4
+if$ -- 45
+int.to.chr$ -- 0
+int.to.str$ -- 0
+missing$ -- 16
+newline$ -- 8
+num.names$ -- 4
+pop$ -- 5
+preamble$ -- 0
+purify$ -- 0
+quote$ -- 0
+skip$ -- 11
+stack$ -- 0
+substring$ -- 23
+swap$ -- 8
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 6
+width$ -- 0
+write$ -- 40
+(There was 1 warning)

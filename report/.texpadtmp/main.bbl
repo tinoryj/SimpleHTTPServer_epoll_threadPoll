@@ -1,0 +1,13 @@
+\begin{thebibliography}{lo}
+\interlinepenalty=10000
+\setlength{\itemsep}{0bp}\setlength{\parskip}{0pt}\small
+\bibitem{fenbushi} 卢誉声.
+  分布式实时处理系统：原理、架构与实现[M]. 北京:
+  机械工业出版社, 2016, 103-106
+\bibitem{LINUX} D.~P. B. .~M. CESATI. 深入理解linux内核[M].
+  中国电力出版社, 2007
+\bibitem{UNIXp} W.~S. . S.~A. Rago. Unix环境高级编程[M].
+  人民邮电出版社, 2014
+\bibitem{CN} J.~F. Kurose. 计算机网络 自顶向下方法[M].
+  机械工业出版社, 2016
+\end{thebibliography}
