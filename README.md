@@ -1,3 +1,59 @@
+
+# Introduction
+University of Electronic Science and Technology 2017 Comprehensive Course Design Topics.
+## Topic Requirements:
+> Implement a simple web server and implement the relevant request handling mechanism
+
+> (1) Learn to understand the HTTP protocol principles and protocol formats;
+
+> (2) Designing a Web server: (a) Developing a multi-threaded server communication program that can receive remote data, each thread corresponding to a TCP link; (b) Defining the HTTP request/response data transmission format; (c) Developing a data parsing module (d) Develop server handlers corresponding to HTTP methods such as GET and POST; (e) Send a response message to the client upon completion of the request message processing, and send a corresponding error response if the server error occurs.
+
+> (3) Use a web browser to test the server and demonstrate it online.
+
+## Implementation
+
+Epoll + thread pool
+## other demands
+
+The boost library needs to be installed. Since Epoll is used, it must be run under a Linux system.
+
+Using Ubuntu as an example, you can use the following command to install the boost library.
+
+```
+Sudo apt-get install libboost-dev
+```
+## usage instructions
+Set the server file path in the httpServer.cpp file: absolute path, as shown below
+
+```C++
+Const char HttpServe::rootDir_[] = "/home/tinoryj/Documents/Code/Server/webSrc";
+```
+
+At the same time, set the home page file name as follows:
+
+```C++
+Const char HttpServe::homePage_[] = "index.html";
+```
+
+After setting the file path in httpServer.cpp, set the number of thread pool threads in webEpollThreadPool.cpp. (can be ignored)
+
+After entering the project folder, you can directly use the *make* directive to complete the build link and generate the executable file webEpollThreadPool.
+The port number needs to be added at startup, as shown below:
+
+```
+Sudo ./webEpollThreadPool 80
+```
+or
+
+```
+./webEpollThreadPool 8080
+```
+
+Specify the port number, and use *sudo* to open the port in the range of 0-1023.
+
+
+===============================================================================
+
 # 工程简介
 电子科技大学2017年综合课程设计题目。
 ## 题目要求：
@@ -23,14 +79,17 @@ sudo apt-get install libboost-dev
 ```
 ## 用法说明
 在httpServer.cpp文件中设置服务器文件路径：绝对路径，如下所示
+
 ```C++
 const char HttpServe::rootDir_[] = "/home/tinoryj/Documents/Code/Server/webSrc";
 ```
+
 同时，设置主页文件名，如下所示：
 
 ```C++
 const char HttpServe::homePage_[] = "index.html";
 ```
+
 在httpServer.cpp中设置文件路径后，在webEpollThreadPool.cpp中设置线程池线程数。（可无视）
 
 在进入工程文件夹后，可直接使用*make*指令完成编译链接，生成可执行文件webEpollThreadPool。
@@ -40,8 +99,11 @@ const char HttpServe::homePage_[] = "index.html";
 sudo ./webEpollThreadPool 80
 ```
 或
+
 ```
 ./webEpollThreadPool 8080
 ```
+
 其中端口号请自行指定，使用时若要开启0-1023范围内的端口，请使用*sudo*。
+
 
