@@ -169,10 +169,11 @@ int HttpServe::processRead(){
 	//解析读入的数据
 	getLine(line, MAXLINE); //读取一行数据
 	sscanf(line, "%s %s %s", method, uri, version);
-	if ( (!strcasecmp(method, "GET")) && (!strcasecmp(method, "POST")) ) {
-
-		sendErrorMsg(method, "501", "Not Implemented","Server does not implement this method");
-		goto end;
+	if ( strcasecmp(method, "GET")) {
+		if ( strcasecmp(method, "POST") ) {
+			sendErrorMsg(method, "501", "Not Implemented","Server does not implement this method");
+			goto end;
+		}
 	}
 
 	readRequestHdrs();  // 处理剩余的请求头部
